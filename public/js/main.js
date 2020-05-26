@@ -83,9 +83,6 @@ socket.on('join_room_response', function(payload){
     newNode.hide();
     $('#messages').append(newNode);
     newNode.slideDown(1000);
-
-    /*$('#messages').append('<p>New user joined the room: '+payload.username+'</p>');*/
-
 });
 
 /* what to do when the server says that someone has left */
@@ -107,15 +104,12 @@ socket.on('player_disconnected', function(payload){
         dom_elements.slideUp(1000);
     }
 
-    /* Manage the new player joined message */
+    /* Manage the player left message */
     var newHTML = '<p>' + payload.username + ' has left the lobby</p>';
     var newNode = $(newHTML);
     newNode.hide();
     $('#messages').append(newNode);
     newNode.slideDown(1000);
-
-    /*$('#messages').append('<p>New user joined the room: '+payload.username+'</p>');*/
-
 });
 
 socket.on('send_message_response', function(payload){
