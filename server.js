@@ -358,6 +358,7 @@ io.sockets.on('connection', function (socket){
 		}
 	*/
 	socket.on('uninvite', function(payload){
+		console.log('REMOVE - NOT WORKING');
 		log('uninvite with ' + JSON.stringify(payload));
 
 		if (('undefined' === typeof payload) || !payload){
