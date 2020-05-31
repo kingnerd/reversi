@@ -416,7 +416,9 @@ io.sockets.on('connection', function (socket){
 			result : 'success',
 			socket_id : socket.id
 		};
-		socket.to(requested_user).emit('uninvited', success_data);
+
+		log ('The uninvited user is : '+requested_user);
+		socket.to(requested_user).emit('uninvite_response', success_data);
 		log ('uninvite successful')
 	});
 

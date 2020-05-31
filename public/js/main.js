@@ -162,6 +162,16 @@ socket.on('uninvite_response', function(payload){
     $('.socket_'+payload.socket_id+' button').replaceWith(newNode);
 });
 
+socket.on('uninvited', function(payload){
+    if(payload.result == 'fail'){
+        alert(payload.message);
+        return;
+    }
+
+    var newNode = makeInviteButton(payload.socket_id);
+    $('.socket_'+payload.socket_id+' button').replaceWith(newNode);
+});
+
 /* game_start Section */
 function game_start(who){
     var payload = {};
