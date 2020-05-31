@@ -357,9 +357,6 @@ io.sockets.on('connection', function (socket){
 			'message' : failure message
 		}
 	*/
-	socket.on('testing', function(payload){
-		log('THIS IS A TEST');
-	});
 
 	socket.on('uninvite', function(payload){
 		log('uninvite with ' + JSON.stringify(payload));

@@ -149,7 +149,7 @@ function uninvite(who){
     payload.requested_user = who;
 
     console.log('*** Client Log Message: \'uninvite\' payload: '+JSON.stringify(payload));
-    socket.emit('testing', payload);
+    socket.emit('uninvite', payload);
 }
 
 socket.on('uninvite_response', function(payload){
