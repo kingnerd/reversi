@@ -79,10 +79,10 @@ socket.on('join_room_response', function(payload){
     }
 
     /* Manage the new player joined message */
-    var newHTML = '<p>' + payload.username + ' just entered the lobby</p>';
+    var newHTML = '<p>' + payload.username + ' just entered the room</p>';
     var newNode = $(newHTML);
     newNode.hide();
-    $('#messages').append(newNode);
+    $('#messages').prepend(newNode);
     newNode.slideDown(1000);
 });
 
@@ -106,10 +106,10 @@ socket.on('player_disconnected', function(payload){
     }
 
     /* Manage the player left message */
-    var newHTML = '<p>' + payload.username + ' has left the lobby</p>';
+    var newHTML = '<p>' + payload.username + ' has left the room</p>';
     var newNode = $(newHTML);
     newNode.hide();
-    $('#messages').append(newNode);
+    $('#messages').prepend(newNode);
     newNode.slideDown(1000);
 });
 
@@ -200,6 +200,7 @@ function send_message(){
     payload.message = $('#send_message_holder').val();
     console.log('*** Client Log Message: \'send_message\' payload: '+JSON.stringify(payload));
     socket.emit('send_message',payload);
+    $('#send_message_holder').val('');
 }
 
 socket.on('send_message_response', function(payload){
@@ -212,7 +213,7 @@ socket.on('send_message_response', function(payload){
     var newNode = $(newHTML);
     newNode.hide();
 
-    $('#messages').append(newNode);
+    $('#messages').prepend(newNode);
     newNode.slideDown(1000);
 });
 
@@ -309,7 +310,7 @@ socket.on('game_update', function(payload){
             /* If the board has changed */
             if (old_board[row][column] != board[row][column]){
                 if(old_board[row][column] == '?' && board[row][column] == ' '){
-                    $('#'+row+'_'+column).html('<img src="assets/images/empty.gif" alt="empty square"/>');
+                    $('#'+row+'_'+column).html('<img src="assets/images/transparent.png" alt="empty square"/>');
                 } else if(old_board[row][column] == '?' && board[row][column] == 'w'){
                     $('#'+row+'_'+column).html('<img src="assets/images/empty_to_white.gif" alt="white square"/>');
                 } else if(old_board[row][column] == '?' && board[row][column] == 'b'){
