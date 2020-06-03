@@ -305,6 +305,7 @@ socket.on('game_update', function(payload){
     }
 
     $('#my_color').html('<h3 id="my_color">I am '+my_color+'</h3>');
+    $('#my_color').append('<h4>It is '+payload.game.whose_turn+'\'s turn </h4>');
 
     /* Animate changes to the board */
     var blacksum = 0;
@@ -317,48 +318,51 @@ socket.on('game_update', function(payload){
             } else if (board[row][column] == 'w'){
                 whitesum++;
             }
-            /* If the board has changed */
-            if (old_board[row][column] != board[row][column]){
-                if(old_board[row][column] == '?' && board[row][column] == ' '){
-                    $('#'+row+'_'+column).html('<img src="assets/images/transparent.png" alt="empty square"/>');
-                } else if(old_board[row][column] == '?' && board[row][column] == 'w'){
-                    $('#'+row+'_'+column).html('<img src="assets/images/empty_to_white.gif" alt="white square"/>');
-                } else if(old_board[row][column] == '?' && board[row][column] == 'b'){
-                    $('#'+row+'_'+column).html('<img src="assets/images/empty_to_black.gif" alt="black square"/>');
-                } else if(old_board[row][column] == '?' && board[row][column] == 'w'){
-                    $('#'+row+'_'+column).html('<img src="assets/images/empty_to_white.gif" alt="white square"/>');
-                } else if(old_board[row][column] == ' ' && board[row][column] == 'b'){
-                    $('#'+row+'_'+column).html('<img src="assets/images/empty_to_black.gif" alt="black square"/>');
-                } else if(old_board[row][column] == ' ' && board[row][column] == 'w'){
-                    $('#'+row+'_'+column).html('<img src="assets/images/empty_to_white.gif" alt="white square"/>');
-                } else if(old_board[row][column] == 'w' && board[row][column] == ' '){
-                    $('#'+row+'_'+column).html('<img src="assets/images/white_to_empty.gif" alt="empty"/>');
-                } else if(old_board[row][column] == 'b' && board[row][column] == ' '){
-                    $('#'+row+'_'+column).html('<img src="assets/images/black_to_empty.gif" alt="empty"/>');
-                } else if(old_board[row][column] == 'w' && board[row][column] == 'b'){
-                    $('#'+row+'_'+column).html('<img src="assets/images/white_to_black.gif" alt="black square"/>');
-                } else if(old_board[row][column] == 'b' && board[row][column] == 'w'){
-                    $('#'+row+'_'+column).html('<img src="assets/images/black_to_white.gif" alt="white square"/>');
-                } else {
-                    $('#'+row+'_'+column).html('<img src="assets/images/error.gif" alt="error"/>');
-                }
 
-                /* Set up interactivity */
-                $('#'+row+'_'+column).off('click');
-                if(board[row][column] == ' '){
-                    $('#'+row+'_'+column).addClass('hovered_over');
-                    $('#'+row+'_'+column).click(function(r,c){
-                        return function(){
+            /* If the board has changed */
+            if (old_board[row][column] != board[row][column]) {
+                if (old_board[row][column] == '?' && board[row][column] == ' ') {
+                    $('#' + row + '_' + column).html('<img src="assets/images/transparent.png" alt="empty square"/>');
+                } else if (old_board[row][column] == '?' && board[row][column] == 'w') {
+                    $('#' + row + '_' + column).html('<img src="assets/images/empty_to_white.gif" alt="white square"/>');
+                } else if (old_board[row][column] == '?' && board[row][column] == 'b') {
+                    $('#' + row + '_' + column).html('<img src="assets/images/empty_to_black.gif" alt="black square"/>');
+                } else if (old_board[row][column] == '?' && board[row][column] == 'w') {
+                    $('#' + row + '_' + column).html('<img src="assets/images/empty_to_white.gif" alt="white square"/>');
+                } else if (old_board[row][column] == ' ' && board[row][column] == 'b') {
+                    $('#' + row + '_' + column).html('<img src="assets/images/empty_to_black.gif" alt="black square"/>');
+                } else if (old_board[row][column] == ' ' && board[row][column] == 'w') {
+                    $('#' + row + '_' + column).html('<img src="assets/images/empty_to_white.gif" alt="white square"/>');
+                } else if (old_board[row][column] == 'w' && board[row][column] == ' ') {
+                    $('#' + row + '_' + column).html('<img src="assets/images/white_to_empty.gif" alt="empty"/>');
+                } else if (old_board[row][column] == 'b' && board[row][column] == ' ') {
+                    $('#' + row + '_' + column).html('<img src="assets/images/black_to_empty.gif" alt="empty"/>');
+                } else if (old_board[row][column] == 'w' && board[row][column] == 'b') {
+                    $('#' + row + '_' + column).html('<img src="assets/images/white_to_black.gif" alt="black square"/>');
+                } else if (old_board[row][column] == 'b' && board[row][column] == 'w') {
+                    $('#' + row + '_' + column).html('<img src="assets/images/black_to_white.gif" alt="white square"/>');
+                } else {
+                    $('#' + row + '_' + column).html('<img src="assets/images/error.gif" alt="error"/>');
+                }
+            }
+
+            /* Set up interactivity */
+            $('#'+row+'_'+column).off('click');
+            $('#'+row+'_'+column).removeClass('hovered_over');
+
+            if (payload.game.whose_turn === my_color) {
+                if (payload.game.legal_moves[row][column] === my_color.substring(0,1)) {
+                    $('#' + row + '_' + column).addClass('hovered_over');
+                    $('#' + row + '_' + column).click(function (r, c) {
+                        return function () {
                             var payload = {};
                             payload.row = r;
                             payload.column = c;
                             payload.color = my_color;
-                            console.log('*** Client Log Message: \'play_token\' payload: '+JSON.stringify(payload));
-                            socket.emit('play_token',payload);
+                            console.log('*** Client Log Message: \'play_token\' payload: ' + JSON.stringify(payload));
+                            socket.emit('play_token', payload);
                         };
-                    }(row,column));
-                } else {
-                    $('#'+row+'_'+column).removeClass('hovered_over');
+                    }(row, column));
                 }
             }
         }
