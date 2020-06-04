@@ -786,7 +786,7 @@ function calculate_valid_moves(who,board){
 				ss = valid_move(who, 1, 0, row, column, board);
 				se = valid_move(who, 1, 1, row, column, board);
 
-				if (nw || nn || ne || ww || ee || sw || ss || ne){
+				if (nw || nn || ne || ww || ee || sw || ss || se){
 					valid[row][column] = who;
 				}
 			}
