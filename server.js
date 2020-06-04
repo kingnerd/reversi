@@ -702,18 +702,22 @@ function create_new_game(){
 }
 
 function check_line_match(who, dr, dc, r, c, board){
+	// If I find a me up that line then we are good for a valid square
 	if (board[r][c] === who){
 		return true;
 	}
 
+	// If we find an empty space then it is not a match
 	if (board[r][c] === ' '){
 		return false;
 	}
 
+	// Row Edge
 	if ((r+dr < 0) || (r+dr > 7)){
 		return false;
 	}
 
+	// Column Edge
 	if ((c+dc < 0) || (c+dc > 7)){
 		return false;
 	}
@@ -771,16 +775,16 @@ function calculate_valid_moves(who,board){
 	for(var row = 0; row < 8; row++){
 		for(var column = 0; column < 8; column++){
 			if(board[row][column] === ' '){
-				var nw = valid_move(who, -1, -1, row, column, board);
-				var nn = valid_move(who, -1, 0, row, column, board);
-				var ne = valid_move(who, -1, 1, row, column, board);
+				nw = valid_move(who, -1, -1, row, column, board);
+				nn = valid_move(who, -1, 0, row, column, board);
+				ne = valid_move(who, -1, 1, row, column, board);
 
-				var ww = valid_move(who, 0, -1, row, column, board);
-				var ee = valid_move(who, 0, 1, row, column, board);
+				ww = valid_move(who, 0, -1, row, column, board);
+				ee = valid_move(who, 0, 1, row, column, board);
 
-				var sw = valid_move(who, 1, -1, row, column, board);
-				var ss = valid_move(who, 1, 0, row, column, board);
-				var ne = valid_move(who, 1, 1, row, column, board);
+				sw = valid_move(who, 1, -1, row, column, board);
+				ss = valid_move(who, 1, 0, row, column, board);
+				se = valid_move(who, 1, 1, row, column, board);
 
 				if (nw || nn || ne || ww || ee || sw || ss || ne){
 					valid[row][column] = who;
@@ -906,20 +910,39 @@ function send_game_update(socket, game_id, message){
 	/* Check to see if the game is over */
 	var row, column;
 	var count = 0;
+	var black = 0;
+	var white = 0;
 	for(row = 0; row < 8; row++){
 		for(column = 0; column < 8; column++){
-			if(games[game_id].board[row][column] != ' '){
+			if(games[game_id].legal_moves[row][column] != ' '){
 				count++;
+			}
+
+			if(games[game_id].board[row][column] === 'b'){
+				black++;
+			}
+
+			if(games[game_id].board[row][column] === 'w'){
+				white++;
 			}
 		}
 	}
 
-	if (count == 64){
+	if (count == 0){
+		var winner = 'tie game';
+		if(black > white){
+			winner = 'black';
+		}
+
+		if (white > black){
+			winner = 'white';
+		}
+
 		/* Send game over message */
 		var success_data = {
 			result: 'success',
 			game: games[game_id],
-			who_won: 'everyone',
+			who_won: winner,
 			game_id: game_id
 		};
 		io.in(game_id).emit('game_over', success_data);
