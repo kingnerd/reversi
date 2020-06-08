@@ -24,3 +24,11 @@ td.hovered_over:hover {
     background: url("../images/hover.gif");
     background-size: 100% 100%;
 }
+
+td.high_value {
+    background-color: cyan;
+}
+
+td.super_high_value {
+    background-color: greenyellow;
+}

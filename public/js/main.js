@@ -366,9 +366,19 @@ socket.on('game_update', function(payload){
             /* Set up interactivity */
             $('#'+row+'_'+column).off('click');
             $('#'+row+'_'+column).removeClass('hovered_over');
+            $('#'+row+'_'+column).removeClass('high_value');
+            $('#'+row+'_'+column).removeClass('super_high_value');
 
             if (payload.game.whose_turn === my_color) {
                 if (payload.game.legal_moves[row][column] === my_color.substring(0,1)) {
+                    /* Identify high value moves for the user */
+                    /* High value the corners */
+                    if ((row == 0 || row == 7) && (column == 0 || column == 7)) {
+                        $('#' + row + '_' + column).addClass('super_high_value');
+                    } else if (row == 0 || row == 7 || column == 0 || column == 7){
+                        $('#' + row + '_' + column).addClass('high_value');
+                    }
+
                     $('#' + row + '_' + column).addClass('hovered_over');
                     $('#' + row + '_' + column).click(function (r, c) {
                         return function () {
